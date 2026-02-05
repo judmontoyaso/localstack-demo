@@ -17,6 +17,9 @@ jobs:
         env:
           SERVICES: s3,sqs,dynamodb,lambda,iam
           DEBUG: 1
+          LAMBDA_EXECUTOR: local
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
 
     steps:
       - name: Checkout
