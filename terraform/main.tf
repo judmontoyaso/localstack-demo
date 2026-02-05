@@ -18,7 +18,7 @@ resource "aws_sqs_queue" "cola" {
 }
 
 resource "aws_lambda_function" "procesar" {
-  filename      = "function.zip"
+  filename = "build/function.zip"
   function_name = "procesar-eventos"
   role          = "arn:aws:iam::000000000000:role/lambda-role"
   handler       = "index.handler"
