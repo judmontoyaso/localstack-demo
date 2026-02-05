@@ -1,0 +1,5 @@
+.env
+/localstack-data
+/.venv
+.terraform.lock.hcl
+terraform.tfstate

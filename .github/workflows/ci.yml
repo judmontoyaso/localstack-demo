@@ -1,0 +1,61 @@
+name: localstack-ci
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  test-localstack:
+    runs-on: ubuntu-latest
+
+    services:
+      localstack:
+        image: localstack/localstack:latest
+        ports:
+          - 4566:4566
+        env:
+          SERVICES: s3,sqs,dynamodb,lambda,iam
+          DEBUG: 1
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+
+      - name: Install tools
+        run: |
+          pip install terraform-local awscli-local
+          sudo apt-get update
+          sudo apt-get install -y zip
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Package Lambda
+        run: |
+          cd lambdas/procesar
+          zip -r ../../build/function.zip .
+
+      - name: Terraform Init
+        run: |
+          cd terraform
+          tflocal init
+
+      - name: Terraform Apply
+        run: |
+          cd terraform
+          tflocal apply -auto-approve
+
+      - name: Invoke Lambda Test
+        run: |
+          echo '{"ci": true}' > payload.json
+          awslocal lambda invoke \
+            --function-name procesar-eventos \
+            --payload file://payload.json \
+            output.json
+          cat output.json
