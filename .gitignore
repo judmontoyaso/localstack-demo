@@ -3,3 +3,5 @@
 /.venv
 .terraform.lock.hcl
 terraform.tfstate
+.terraform/providers/registry.terraform.io/hashicorp/aws/6.31.0/windows_amd64/LICENSE.txt
+.terraform/providers/registry.terraform.io/hashicorp/aws/6.31.0/windows_amd64/terraform-provider-aws_v6.31.0_x5.exe
