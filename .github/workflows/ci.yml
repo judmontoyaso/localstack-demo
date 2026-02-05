@@ -59,6 +59,7 @@ jobs:
           echo '{"ci": true}' > payload.json
           awslocal lambda invoke \
             --function-name procesar-eventos \
+            --cli-binary-format raw-in-base64-out \
             --payload file://payload.json \
             output.json
           cat output.json
